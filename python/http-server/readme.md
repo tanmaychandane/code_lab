@@ -1,4 +1,4 @@
-# Key Concepts You've Learned
+# Key Concepts Learned
 
 This repository documents the fundamental concepts of building and working with web APIs.
 
