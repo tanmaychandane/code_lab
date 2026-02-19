@@ -1,0 +1,52 @@
+sudo apt install python3 python3-pip -y
+mkdir covid_viz && cd covid_viz
+python3 -m venv venv
+source venv/bin/activate
+pip install pandas matplotlib seaborn jupyter
+jupyter notebook --no-browser --ip=0.0.0.0 --port=8888
+wget https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv -O covid.csv
+
+
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("covid.csv")
+# Inspect first rows
+df.head()
+
+
+import matplotlib.pyplot as plt
+
+india = df[df['location'] == 'India']
+
+plt.figure(figsize=(12,6))
+plt.plot(india['date'], india['new_cases'], color='blue')
+plt.title("Daily New COVID-19 Cases in India")
+plt.xlabel("Date")
+plt.ylabel("New Cases")
+plt.show()
+
+countries = df[df['location'].isin(['India','United States'])]
+
+plt.figure(figsize=(12,6))
+for country in ['India','United States']:
+    subset = countries[countries['location'] == country]
+    plt.plot(subset['date'], subset['new_cases'], label=country)
+
+plt.title("COVID-19 Cases: India vs USA")
+plt.xlabel("Date")
+plt.ylabel("New Cases")
+plt.legend()
+plt.show()
+
+
+  import seaborn as sns
+
+# Select numeric columns
+numeric_df = df[['new_cases','new_deaths','new_vaccinations']].dropna()
+
+plt.figure(figsize=(8,6))
+sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm")
+plt.title("Correlation Heatmap")
+plt.show()
+
